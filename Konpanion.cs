@@ -20,6 +20,8 @@ namespace Konpanion
     {
 
         internal static Konpanion Instance;
+
+        internal static List<GameObject> knights = new List<GameObject>();
         
         public override string GetVersion()
         {
