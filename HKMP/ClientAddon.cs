@@ -47,10 +47,11 @@ namespace Konpanion {
                     var _go = Konpanion.Instance.GetNetworkKonpanion(packetData.playerId);
                     var _control = _go.GetComponent<CompanionControl>();
                     _control.state = packetData.anim;
-                    _control.transform.position = new Vector2(packetData.pos.X,packetData.pos.Y);
+                    //_go.transform.position = _control.networkMovementTarget;
+                    _control.networkMovementTarget = new Vector2(packetData.pos.X,packetData.pos.Y);
                     _control.lookDirection = packetData.dir;
                     _control.isNetworkControlled = true;
-                    _control.moveToNext = true;
+                    _control.UpdateNetworkCoro();
                 }
             );
         }
