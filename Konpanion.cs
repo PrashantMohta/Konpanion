@@ -22,7 +22,8 @@ namespace Konpanion
         internal static Konpanion Instance;
 
         internal static List<GameObject> knights = new List<GameObject>();
-        
+        internal static Dictionary<ushort,GameObject> remoteKnights = new Dictionary<ushort,GameObject>();
+
         public override string GetVersion()
         {
             return "0.1";
@@ -75,7 +76,14 @@ namespace Konpanion
             Instance = this;
             ModHooks.HeroUpdateHook += update;
         }
-           
+        
+        public GameObject GetNetworkKonpanion(ushort id){
+            if(remoteKnights.TryGetValue(id,out var knight)){
+                return knight;
+            }
+            remoteKnights[id] = createKnightCompanion();
+            return remoteKnights[id];
+        }
         public void update()
         {
             if(knights.Count < 1) {

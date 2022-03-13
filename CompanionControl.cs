@@ -27,6 +27,8 @@ namespace Konpanion
     }
     public class CompanionControl : MonoBehaviour
     {
+
+        public bool isNetworkControlled = false;
         
         public tk2dSpriteAnimator animator;
         public Rigidbody2D rb;
@@ -45,11 +47,11 @@ namespace Konpanion
         public Dictionary<State,string> Animations = new Dictionary<State,string>();
 
         public float followClipChance = 0.03f, teleportClipChance =  0.60f,turnClipChance = 30f, yayClipChance = 0.01f;
-        private State state = State.Idle;
-        private Direction lookDirection = Direction.Left;
+        internal State state = State.Idle;
+        internal Direction lookDirection = Direction.Left;
 
         private bool changeDirection = false;
-        private bool moveToNext = true;
+        internal bool moveToNext = true;
         
         public GameObject getFollowTarget(){
             if(followTarget == null){
@@ -228,10 +230,23 @@ namespace Konpanion
             moveToNext = true;
         }
 
+        private IEnumerator ApplyNetworkState(){
+            //play follow animation
+            playAnimForState();
+            yield return null;
+            moveToNext = false;
+        }
         private IEnumerator MainLoop(){
             while(true){
                 yield return new WaitWhile(()=>!moveToNext);
                 moveToNext = false;
+                if(isNetworkControlled){
+                    StartCoroutine(ApplyNetworkState());
+                    continue;
+                }
+                if(KonpanionClient.clientApi != null && KonpanionClient.clientApi.NetClient.IsConnected){
+                    KonpanionClient.sendUpdate((Vector2) transform.position,state,lookDirection);
+                }
                 //Log(gameObject.name + " : " + state);
                 if(state == State.Idle || state == State.IdleFidget1 || state == State.IdleFidget2){
                     StartCoroutine(Idle());
