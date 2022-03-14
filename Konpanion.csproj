@@ -79,10 +79,15 @@
     <Reference Include="Satchel">
       <HintPath>..\Satchel\bin\Debug\Satchel.dll</HintPath>
     </Reference>
+    <Reference Include="Hkmp">
+      <HintPath>..\HKMP\ref\HKMP.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Konpanion.cs" />
     <Compile Include="CompanionControl.cs" />
+    <Compile Include="HKMP\*.cs" />
+
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
