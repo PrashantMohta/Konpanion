@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using Modding;
 using System.Collections.Generic;
-
-using Modding;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
-
-using HutongGames.PlayMaker.Actions;
-
-using static Modding.Logger;
-using static Satchel.GameObjectUtils;
-using static Satchel.FsmUtil;
 using static Satchel.EnemyUtils;
+using static Satchel.GameObjectUtils;
 
 namespace Konpanion
 {
@@ -24,9 +14,14 @@ namespace Konpanion
         internal static List<GameObject> knights = new List<GameObject>();
         internal static Dictionary<ushort,GameObject> remoteKnights = new Dictionary<ushort,GameObject>();
 
+        public static bool HasPouch()
+        {
+            var hasPouch = ModHooks.GetMod("HkmpPouch") is Mod;
+            return hasPouch;
+        }
         public override string GetVersion()
         {
-            return "0.1";
+            return "0.2";
         }
 
         public GameObject createKnightCompanion(GameObject ft = null){
@@ -75,8 +70,13 @@ namespace Konpanion
         {
             Instance = this;
             ModHooks.HeroUpdateHook += update;
+            if (Konpanion.HasPouch())
+            {
+                PouchIntegration.Initialize();
+            }
         }
-        
+
+
         public GameObject GetNetworkKonpanion(ushort id){
             if(remoteKnights.TryGetValue(id,out var knight)){
                 return knight;

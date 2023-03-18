@@ -1,17 +1,12 @@
 
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Modding;
-using HutongGames.PlayMaker.Actions;
-
-using static Modding.Logger;
+using UnityEngine;
 using static Satchel.EnemyUtils;
 using static Satchel.GameObjectUtils;
-using static Satchel.FsmUtil;
 
 namespace Konpanion
-{   
+{
     public enum State {
         Idle = 0,
         IdleFidget1,
@@ -161,8 +156,8 @@ namespace Konpanion
             }
             rb.velocity = new Vector2(0.0f, 0.0f);
 
-            var force = new Vector2(Random.Range(-1.0f, 1.0f),Random.Range(-1.0f, 1.0f));
-            yield return rb.moveTowards(-force,IdleShuffleDistance,0.2f);
+            //var force = new Vector2(Random.Range(-1.0f, 1.0f),Random.Range(-1.0f, 1.0f));
+            //yield return rb.moveTowards(-force,IdleShuffleDistance,0.2f);
             
             var lastState = state;
             decideNextState();
@@ -263,14 +258,15 @@ namespace Konpanion
             while(true){
                 yield return new WaitWhile(()=>!moveToNext);
                 moveToNext = false;
-                if(isNetworkControlled){
+                if (isNetworkControlled)
+                {
                     continue;
                 }
-                if(KonpanionClient.clientApi != null && KonpanionClient.clientApi.NetClient.IsConnected){
-                    KonpanionClient.sendUpdate((Vector2) transform.position,state,lookDirection);
+                if (Konpanion.HasPouch()) { 
+                    PouchIntegration.SendUpdate(this);
                 }
-                //Log(gameObject.name + " : " + state);
-                if(state == State.Idle || state == State.IdleFidget1 || state == State.IdleFidget2){
+
+                if (state == State.Idle || state == State.IdleFidget1 || state == State.IdleFidget2){
                     StartCoroutine(Idle());
                 } else if(state == State.Walk){
                     StartCoroutine(Follow());
