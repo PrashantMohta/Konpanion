@@ -1,17 +1,12 @@
 
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Modding;
-using HutongGames.PlayMaker.Actions;
-
-using static Modding.Logger;
+using UnityEngine;
 using static Satchel.EnemyUtils;
 using static Satchel.GameObjectUtils;
-using static Satchel.FsmUtil;
 
 namespace Konpanion
-{   
+{
     public enum State {
         Idle = 0,
         IdleFidget1,
@@ -27,6 +22,8 @@ namespace Konpanion
     }
     public class CompanionControl : MonoBehaviour
     {
+
+        public bool isNetworkControlled = false;
         
         public tk2dSpriteAnimator animator;
         public Rigidbody2D rb;
@@ -45,11 +42,11 @@ namespace Konpanion
         public Dictionary<State,string> Animations = new Dictionary<State,string>();
 
         public float followClipChance = 0.03f, teleportClipChance =  0.60f,turnClipChance = 30f, yayClipChance = 0.01f;
-        private State state = State.Idle;
-        private Direction lookDirection = Direction.Left;
+        internal State state = State.Idle;
+        internal Direction lookDirection = Direction.Left;
 
         private bool changeDirection = false;
-        private bool moveToNext = true;
+        internal bool moveToNext = true;
         
         public GameObject getFollowTarget(){
             if(followTarget == null){
@@ -159,8 +156,8 @@ namespace Konpanion
             }
             rb.velocity = new Vector2(0.0f, 0.0f);
 
-            var force = new Vector2(Random.Range(-1.0f, 1.0f),Random.Range(-1.0f, 1.0f));
-            yield return rb.moveTowards(-force,IdleShuffleDistance,0.2f);
+            //var force = new Vector2(Random.Range(-1.0f, 1.0f),Random.Range(-1.0f, 1.0f));
+            //yield return rb.moveTowards(-force,IdleShuffleDistance,0.2f);
             
             var lastState = state;
             decideNextState();
@@ -227,13 +224,49 @@ namespace Konpanion
             state = State.Idle;
             moveToNext = true;
         }
+        public Vector2 networkMovementTarget = new Vector2(0,0);
+        
+        public Coroutine networkCoro;
+        private IEnumerator ApplyNetworkState(){
+            yield return null;
+            // play animation
+            playAnimForState();
+            // update direction
+            var ls = gameObject.transform.localScale;
+            ls.x = (lookDirection == Direction.Left? 1f : -1f)*Mathf.Abs(ls.x);
+            gameObject.transform.localScale = ls;
+            //interpolate movement
+            var value = 0.1f;
+            if(state == State.Teleport){
+                transform.position = networkMovementTarget;
+            } else {
+                while((Vector2)transform.position != networkMovementTarget){
+                    transform.position = Vector2.Lerp(transform.position, networkMovementTarget, value);
+                    value += 0.1f;
+                    yield return new WaitForSeconds(0.02f);
+                }
+            }
+        }
+        internal void UpdateNetworkCoro(){
+            if(networkCoro != null){
+                StopCoroutine(networkCoro);
+            }
+            networkCoro = StartCoroutine(ApplyNetworkState());
+        }
 
         private IEnumerator MainLoop(){
             while(true){
                 yield return new WaitWhile(()=>!moveToNext);
                 moveToNext = false;
-                //Log(gameObject.name + " : " + state);
-                if(state == State.Idle || state == State.IdleFidget1 || state == State.IdleFidget2){
+                if (isNetworkControlled)
+                {
+                    continue;
+                }
+                if (Konpanion.HasPouch()) { 
+                    PouchIntegration.SendUpdate(this);
+                }
+
+                if (state == State.Idle || state == State.IdleFidget1 || state == State.IdleFidget2){
                     StartCoroutine(Idle());
                 } else if(state == State.Walk){
                     StartCoroutine(Follow());

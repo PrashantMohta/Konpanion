@@ -11,11 +11,10 @@
     <AssemblyName>Konpanion</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <VanillaFiles>..\Vanilla</VanillaFiles>
-    <ModdingAPi>..\HollowKnight.Modding\OutputFinal</ModdingAPi>
-    <HollowKnightModsDirectory>..\linkedtoHKMods</HollowKnightModsDirectory>
+    <VanillaFiles>D:\SteamLibrary\steamapps\common\Hollow Knight\hollow_knight_Data\Managed</VanillaFiles>
+    <ModdingAPi>D:\SteamLibrary\steamapps\common\Hollow Knight\hollow_knight_Data\Managed</ModdingAPi>
+    <HollowKnightModsDirectory>D:\SteamLibrary\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods</HollowKnightModsDirectory>
     <TargetFrameworkProfile />
-
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,47 +48,52 @@
     <Reference Include="UnityEngine">
       <HintPath>$(VanillaFiles)\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(VanillaFiles)\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>$(VanillaFiles)\UnityEngine.InputLegacyModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>$(VanillaFiles)\UnityEngine.AudioModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(VanillaFiles)\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>lib\UnityEngine.AudioModule.dll</HintPath>
+      <HintPath>$(VanillaFiles)\UnityEngine.AudioModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>lib\UnityEngine.ImageConversionModule.dll</HintPath>
+      <HintPath>$(VanillaFiles)\UnityEngine.ImageConversionModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.Physics2DModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>lib\UnityEngine.Physics2DModule.dll</HintPath>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>$(VanillaFiles)\UnityEngine.Physics2DModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PlayMaker, Version=1.6.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(VanillaFiles)\PlayMaker.dll</HintPath>
     </Reference>
     <Reference Include="Satchel">
-      <HintPath>..\Satchel\bin\Debug\Satchel.dll</HintPath>
+      <HintPath>$(HollowKnightModsDirectory)\Satchel\Satchel.dll</HintPath>
+    </Reference>
+    <Reference Include="Hkmp">
+      <HintPath>$(HollowKnightModsDirectory)\HKMP\HKMP.dll</HintPath>
+    </Reference>
+    <Reference Include="HkmpPouch">
+      <HintPath>$(HollowKnightModsDirectory)\HkmpPouch\HkmpPouch.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Konpanion.cs" />
     <Compile Include="CompanionControl.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Konpanion.cs" />
+    <Compile Include="KonpanionUpdate.cs" />
+    <Compile Include="Utilities.cs" />
+    <Compile Include="PouchIntegration.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
   </PropertyGroup>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(HollowKnightModsDirectory)\$(AssemblyName)" />
-    </Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(HollowKnightModsDirectory)\$(AssemblyName)" />
+  </Target>
 </Project>
