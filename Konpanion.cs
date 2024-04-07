@@ -21,7 +21,7 @@ namespace Konpanion
         }
         public override string GetVersion()
         {
-            return "0.2";
+            return "1.0";
         }
 
         public GameObject createKnightCompanion(GameObject ft = null){
