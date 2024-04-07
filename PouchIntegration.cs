@@ -14,7 +14,7 @@ namespace Konpanion
         internal static string oldUpdate = null;
         internal static void Initialize()
         {
-            SafePouchIntegration.pipe.OnReady += Pipe_OnReady;
+            SafePouchIntegration.pipe.On(KonpanionUpdateFactory.Instance).Do<KonpanionUpdate>(KonpanionUpdateHandler);
         }
         internal static void SendUpdate(CompanionControl companionControl)
         {
@@ -34,11 +34,6 @@ namespace Konpanion
                     oldUpdate = newUpdate.ToString();
                 }
             }
-        }
-
-        internal static void Pipe_OnReady(object sender, EventArgs e)
-        {
-            SafePouchIntegration.pipe.On(KonpanionUpdateFactory.Instance).Do<KonpanionUpdate>(KonpanionUpdateHandler);
         }
 
         internal static void KonpanionUpdateHandler(KonpanionUpdate update)

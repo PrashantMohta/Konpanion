@@ -11,9 +11,9 @@
     <AssemblyName>Konpanion</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <VanillaFiles>D:\SteamLibrary\steamapps\common\Hollow Knight\hollow_knight_Data\Managed</VanillaFiles>
-    <ModdingAPi>D:\SteamLibrary\steamapps\common\Hollow Knight\hollow_knight_Data\Managed</ModdingAPi>
-    <HollowKnightModsDirectory>D:\SteamLibrary\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods</HollowKnightModsDirectory>
+    <VanillaFiles>E:\SteamLibrary\steamapps\common\Hollow Knight\hollow_knight_Data\Managed</VanillaFiles>
+    <ModdingAPi>E:\SteamLibrary\steamapps\common\Hollow Knight\hollow_knight_Data\Managed</ModdingAPi>
+    <HollowKnightModsDirectory>E:\SteamLibrary\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods</HollowKnightModsDirectory>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
